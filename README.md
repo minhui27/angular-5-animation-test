@@ -2,6 +2,10 @@
 
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.26.
 
+## TEST
+1. Click on the `menu` button on the top to toggle the side menu.
+2. Move the cursor in and out from the side menu to test the bug. (The bug will appear if the cursor is moved faster.)
+
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
