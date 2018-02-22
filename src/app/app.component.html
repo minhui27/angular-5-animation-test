@@ -1,3 +1,155 @@
-<h1>
-  {{title}}
-</h1>
+<div class="tst-side-nav" [@animateWidth1]="state" (mouseenter)="toggleFocusHover(false)" (mouseleave)="toggleFocusHover(true)">
+
+	<div class="tst-side-nav-top">
+		<span class="tst-side-nav-top-symbol">
+			T
+		</span>
+		<span class="tst-side-nav-top-title" [@animateOpacity]="state">
+			MAIN TITLE
+			<span class="tst-side-nav-toggle" (click)="toggleFocusClick()">
+				<mat-icon>{{ smDevice ? 'arrow_back' : 'menu' }}</mat-icon>
+			</span>
+		</span>
+	</div>
+
+	<div style="position: relative">
+		<div class="tst-side-nav-bottom" #tstSideNavBottom>
+			<ul *ngFor="let a of data">
+				<li
+					class="sn-main"
+					[ngClass]="{'sn-list-1': (a.sub || a.state)}"
+					[@animateWidth2]="state"
+					(mouseenter)="hoverSideMenu($event, a)"
+					(click)="clickSideMenu($event, a)">
+						<span *ngIf="(a.sub || a.state)" class="sn-icon-left">
+							<mat-icon *ngIf="a.icon">{{ a.icon }}</mat-icon>
+
+							<span *ngIf="!a.icon" class="icon-text">
+								{{ (a.icon_text ? a.icon_text : ( a.icon_text || (a.title | slice:0:1) )) }}
+							</span>
+						</span>
+
+						<span *ngIf="!(a.sub || a.state)" class="sn-icon-left grey" [@animateUnOpacity]="state">
+							<mat-icon>remove</mat-icon>
+						</span>
+
+						<span [@animateOpacity]="state">
+							<span
+								*ngIf="!a.state && !a.sub"
+								class="tst-side-nav-word-1">
+									{{ a.title }}
+							</span>
+
+							<span
+								*ngIf="!a.state && a.sub"
+								class="tst-side-nav-word-2 tst-side-nav-fixed-width">
+									{{ a.title }}
+									<mat-icon class="sn-chevron-right">{{ smDisplay[a.id] ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}</mat-icon>
+							</span>
+
+							<a
+								*ngIf="a.state"
+								class="tst-side-nav-word-2 tst-side-nav-fixed-width"
+								href="#">
+									{{ a.title }}
+							</a>
+						</span>
+				</li>
+
+				<li
+					*ngFor="let d of a.sub"
+					class="tst-side-nav-sub-sm-li"
+					[style.display]="smDisplay[a.id] ? 'block' : 'none'">
+						<span
+							*ngIf="!d.state && !(d.is_child && d.sub && d.sub.length > 0)"
+							class="tst-side-nav-word-1"
+							(click)="clickSubSideMenu($event, d)">
+								{{ d.title }}
+						</span>
+
+						<span
+							*ngIf="!d.state && d.is_child && d.sub && d.sub.length > 0"
+							class="tst-side-nav-word-2"
+							(click)="clickSubSideMenu($event, d)">
+								{{ d.title }}
+								<mat-icon class="sn-chevron-right">{{ smSubDisplay[d.id] ? 'keyboard_arrow_down' : 'keyboard_arrow_right'}}</mat-icon>
+						</span>
+
+						<a *ngIf="d.state"
+							class="tst-side-nav-word-2"
+							[ngClass]="{'sn-list-1': d.state || (!d.state && d.is_child && d.sub && d.sub.length > 0)}"
+							href="#"
+							(click)="clickSubSideMenu($event, d)">
+								{{ d.title }}
+						</a>
+
+						<span *ngIf="!d.state && d.is_child && d.sub && d.sub.length > 0" [style.display]="smSubDisplay[d.id] ? 'block' : 'none'">
+							<li *ngFor="let e of d.sub" class="tst-side-nav-sub-sub-sm-li">
+								<a
+									class="tst-side-nav-word-2"
+									href="#">
+										{{ e.title }}
+								</a>
+							</li>
+						</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div
+		class="tst-side-menu-nav-sub"
+		[style.top]="top"
+		[style.display]="display"
+		[style.max-height]="maxHeight">
+			<div [style.max-height]="maxHeight" (mouseleave)="mouseLeave($event)">
+				<ul>
+					<li
+						class="sn-main"
+						*ngFor="let b of subData"
+						[ngClass]="{'sn-list-1': b.state || (!b.state && b.is_child && b.sub && b.sub.length > 0)}"
+						(mouseenter)="subHoverSideMenu($event, b)">
+							<span
+								*ngIf="!b.state && !(b.is_child && b.sub && b.sub.length > 0)"
+								class="tst-side-nav-word-1 no-icon">
+									{{ b.title }}
+							</span>
+
+							<span
+								*ngIf="!b.state && b.is_child && b.sub && b.sub.length > 0"
+								class="tst-side-nav-word-2 no-icon">
+									{{ b.title }}
+									<mat-icon class="sn-chevron-right">keyboard_arrow_right</mat-icon>
+							</span>
+
+							<a
+								*ngIf="b.state"
+								class="tst-side-nav-word-2 no-icon"
+								href="#">
+									{{ b.title }}
+							</a>
+					</li>
+				</ul>
+			</div>
+	</div>
+
+	<div
+		class="tst-side-menu-nav-sub"
+		[style.top]="subTop"
+		[style.display]="subDisplay"
+		[style.max-height]="subMaxHeight"
+		[style.left]="subLeft">
+			<div [style.max-height]="subMaxHeight" (mouseleave)="subMouseLeave($event)">
+				<ul>
+					<li *ngFor="let c of subSubData" class="sn-list-1 sn-main" >
+						<a
+							class="tst-side-nav-word-2 no-icon"
+							href="#">
+								{{ c.title }}
+						</a>
+					</li>
+				</ul>
+			</div>
+	</div>
+
+</div>
